@@ -1,0 +1,31 @@
+{
+  "name": "figpack",
+  "version": "0.1.0",
+  "description": "A simple build tool for Figma plugins based on webpack",
+  "bin": "figpack.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "14"
+  },
+  "dependencies": {
+    "@babel/core": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "babel-preset-env": "^1.7.0",
+    "chokidar": "^3.5.1",
+    "classnames": "^2.2.6",
+    "css-loader": "^3.1.0",
+    "html-loader": "^0.5.5",
+    "node-sass": "^4.12.0",
+    "raw-loader": "^4.0.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^2.0.0",
+    "tmp": "^0.2.1",
+    "ts-loader": "^6.0.4",
+    "webpack": "^4.46.0",
+    "yargs": "^13.3.2"
+  },
+  "author": "Roman Nurik <roman@nurik.net>",
+  "license": "Apache-2.0"
+}
