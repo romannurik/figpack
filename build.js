@@ -127,7 +127,6 @@ function prepareFigpackConfig() {
         for (let ext of COMMAND_EXTENSIONS) {
           if (file2 === `index${ext}`) {
             command.module = f2;
-            break;
           } else if (file2 === `ui${ext}`) {
             command.uiModule = f2;
           } else if (file2 === `ui.html`) {
@@ -135,7 +134,9 @@ function prepareFigpackConfig() {
           }
         }
       }
-      commands.push(command);
+      if (command.module) {
+        commands.push(command);
+      }
     } else {
       for (let ext of COMMAND_EXTENSIONS) {
         if (file.endsWith(ext)) {
