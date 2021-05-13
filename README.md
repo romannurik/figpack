@@ -10,15 +10,21 @@ It's optimized for plugins that could get complex, meaning multiple commands, mu
 
 ## Scaffold a new plugin
 
-`$ npx figpack init <dir>`
+To initialize a new plugin:
+
+    $ npx figpack init <dir>
+
+If you want to use the "opinionated" template that uses React and `react-figma-plugin-ds`:
+
+    $ npx figpack init --template react <dir>
 
 ## Build your plugin
 
-`$ npx figpack build`
+    $ npx figpack build
 
 Build + watch for changes with:
 
-`$ npx figpack build -w`
+    $ npx figpack build -w
 
 # How it works
 

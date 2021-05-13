@@ -1,0 +1,18 @@
+{
+  "name": "%%PLUGIN_NAME%%-figma-plugin",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "figpack",
+    "start": "figpack --watch"
+  },
+  "devDependencies": {
+    "figpack": "^%%FIGPACK_VERSION%%"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "figma-messenger": "^1.0.5",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-figma-plugin-ds": "^2.1.0"
+  }
+}

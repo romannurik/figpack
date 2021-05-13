@@ -20,6 +20,7 @@ const webpack = require('webpack');
 
 module.exports = ({ mainEntry, commands }) => ({
   mode: 'production',
+  // devtool: '', // use if mode: 'development'
   entry: {
     main: mainEntry,
     ...commands

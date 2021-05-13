@@ -1,0 +1,13 @@
+{
+  "name": "%%PLUGIN_NAME%%-figma-plugin",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "figpack",
+    "start": "figpack --watch"
+  },
+  "devDependencies": {
+    "figpack": "^%%FIGPACK_VERSION%%"
+  },
+  "dependencies": {
+  }
+}

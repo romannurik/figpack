@@ -21,7 +21,12 @@ const init = require('./init');
 const build = require('./build');
 
 yargs
-  .command('init <dir>', 'Scaffold a new plugin', () => { }, init)
+  .command('init <dir>', 'Scaffold a new plugin', yargs => {
+    yargs.option('template', {
+      choices: ['', 'react', 'vanilla'],
+      default: '',
+    });
+  }, init)
   .command(['build', '$0'], 'Build the current plugin', yargs => {
     yargs.option('watch', {
       description: 'Watch for changes',

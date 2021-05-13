@@ -1,0 +1,22 @@
+@import '~react-figma-plugin-ds/figma-plugin-ds.css';
+
+body {
+  margin: 0;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
+.purple {
+  color: var(--purple);
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin: 8px;
+}

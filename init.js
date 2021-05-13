@@ -17,98 +17,100 @@
 const fs = require('fs');
 const path = require('path');
 const figpackPackageJson = require('./package.json');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const { spawn } = require('child_process');
 
-const TEMPLATE_DIR = path.resolve(__dirname, 'init-template');
-const TEMPLATE_COMMAND_DIR = path.resolve(__dirname, 'init-template/command-template');
-const BAIL_EXISTING_FILES = ['manifest.json', 'commands', 'package.json'];
+const ALLOW_EXISTING_FILES = new Set(['.git', '.gitignore', 'LICENSE', 'README.md']);
+const DEFAULT_TEMPLATE = 'vanilla';
 
 /**
  * Initialize a new plugin in the current folder
  */
-module.exports = async function init({ dir }) {
+module.exports = async function init({ dir, template }) {
+  if (!template) {
+    template = DEFAULT_TEMPLATE;
+  }
+
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
 
+  const templateDir = path.resolve(__dirname, 'init-templates', template);
+  const templateCommandDir = path.resolve(templateDir, 'command-template');
+
   process.chdir(dir);
-  for (let f of BAIL_EXISTING_FILES) {
-    if (fs.existsSync(f)) {
-      console.error(`The directory "${dir}" already has a plugin!`);
-      process.exit(1);
+  for (let f of fs.readdirSync('.')) {
+    if (ALLOW_EXISTING_FILES.has(f)) {
+      continue;
     }
+
+    console.error(`❗️ The target directory "${dir}" isn't empty!`);
+    process.exit(1);
   }
 
-  console.log(`Scaffolding new plugin in directory "${dir}"...`);
+  console.log(`🐣 Scaffolding a new Figma plugin in directory "${dir}"...`);
 
   let pluginFolder = path.basename(path.resolve('.'));
-  execTemplateDir(TEMPLATE_DIR, '.');
-  fs.writeFileSync('package.json', JSON.stringify(makePackageJson(pluginFolder), null, 2));
-  fs.writeFileSync('manifest.json', JSON.stringify(makeManifestJson(pluginFolder), null, 2));
+
+  let templateVars = {
+    PLUGIN_NAME: pluginFolder,
+    FIGPACK_VERSION: figpackPackageJson.version,
+  };
+
+  execTemplateDir(templateDir, '.', templateVars);
   fs.mkdirSync('commands/cmd1', { recursive: true });
-  execTemplateDir(TEMPLATE_COMMAND_DIR, 'commands/cmd1');
+  execTemplateDir(templateCommandDir, 'commands/cmd1', templateVars);
 
   try {
-    console.log('Installing dependencies...');
-    await exec('npm install --save-dev @figma/plugin-typings');
-    await exec('npm install --save react react-dom react-figma-plugin-ds');
-    await exec('npm install');
-    console.log(`Done.`);
+    console.log('📦 Installing dependencies...');
+    await $('npm install --save-dev --force @figma/plugin-typings');
+    console.log(`✅ Done! Your plugin starter is ready.
+🔧 To build your plugin and watch for changes (start developing):
+
+    $ cd ${dir}
+    $ npm start
+
+🔧 To run a one-time build, run:
+
+    $ npm run build
+
+🦞 Next, grab a new plugin ID from Figma and set the "id" field in manifest.json.
+`);
   } catch (e) {
-    console.error(e.toString());
+    console.error(`❗️ Error running figpack init: ${e}`);
   }
+}
+
+/**
+ * Runs a shell command with options, returns a promise.
+ */
+function $(cmd) {
+  return new Promise((resolve, reject) => {
+    let args = cmd.split(/\s+/);
+    let child;
+    try {
+      child = spawn(args[0], args.slice(1), { stdio: 'inherit' });
+    } catch (e) {
+      throw new Error(`Error running "${cmd}"`);
+    }
+    child.on('error', e => reject(`Command "${cmd}" failed (${e.toString()})`));
+    child.on('exit', code => {
+      (code === 0 ? resolve : reject)(code)
+    });
+  });
 }
 
 /**
  * Instantiates a copy of all files in the given template directory to the
  * given output directory.
  */
-function execTemplateDir(templateDir, destDir = '.') {
+function execTemplateDir(templateDir, destDir, templateVars) {
   for (let file of fs.readdirSync(templateDir)) {
     let f = path.resolve(templateDir, file);
     if (fs.statSync(f).isDirectory()) {
       continue;
     }
     let s = fs.readFileSync(f, { encoding: 'utf-8' });
+    s = s.replace(/%%(\w+)%%/g, (_, k) => templateVars[k] || '');
     fs.writeFileSync(path.resolve(destDir, file), s);
   }
-}
-
-/**
- * Prepare a scaffold package.json
- */
-function makePackageJson(pluginName) {
-  return {
-    "name": `${pluginName}-figma-plugin`,
-    "version": "1.0.0",
-    "scripts": {
-      "build": "figpack",
-      "start": "figpack --watch"
-    },
-    "devDependencies": {
-      "figpack": `^${figpackPackageJson.version}`
-    },
-    "dependencies": {
-      "classnames": "^2.2.6",
-      "figma-messenger": "^1.0.5"
-    }
-  };
-}
-
-/**
- * Prepares a scaffold manifest.json
- */
-function makeManifestJson(pluginName) {
-  return {
-    "api": "1.0.0",
-    "name": pluginName,
-    "id": "000000000000000000",
-    "menu": [
-      {
-        "name": "Command 1",
-        "command": "cmd1"
-      }
-    ]
-  };
 }

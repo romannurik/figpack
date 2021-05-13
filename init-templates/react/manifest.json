@@ -1,0 +1,11 @@
+{
+  "api": "1.0.0",
+  "name": "%%PLUGIN_NAME%%",
+  "id": "000000000000000000",
+  "menu": [
+    {
+      "name": "Command 1",
+      "command": "cmd1"
+    }
+  ]
+}
