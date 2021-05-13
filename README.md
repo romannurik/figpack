@@ -12,25 +12,36 @@ It's optimized for plugins that could get complex, meaning multiple commands, mu
 
 To initialize a new plugin:
 
-    $ npx figpack init <dir>
+```shell
+$ npx figpack init <dir>
+```
 
 If you want to use the "opinionated" template that uses React and `react-figma-plugin-ds`:
 
-    $ npx figpack init --template react <dir>
+```shell
+$ npx figpack init --template react <dir>
+```
 
 ## Build your plugin
 
-    $ npx figpack build
+```shell
+$ npx figpack build     # build once
+$ npx figpack build -w  # build + watch
+```
 
-Build + watch for changes with:
+Or if you've created your plugin with the `init` script:
 
-    $ npx figpack build -w
+```shell
+$ npm run build     # build once
+$ npm start         # build + watch
+```
+
 
 # How it works
 
 Figpack handles a couple typically very boilerplate-y things for you:
 
-- It looks at your `commands` folder and exposes commands based on the subdirectory names.
+- It looks at your `commands` folder and exposes commands based on the subdirectory names. You should have an `index.ts` (or .js) file in there.
 - It automatically detects `ui.html` (or .tsx, .jsx, .ts, .js) for each command and exposes it as `__html__` for the command's main module.
 
 # License
