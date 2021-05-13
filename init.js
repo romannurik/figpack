@@ -45,7 +45,7 @@ module.exports = async function init({ dir }) {
   let pluginFolder = path.basename(path.resolve('.'));
   execTemplateDir(TEMPLATE_DIR, '.');
   fs.writeFileSync('package.json', JSON.stringify(makePackageJson(pluginFolder), null, 2));
-  fs.writeFileSync('manifest.json', JSON.stringify(makeManifetJson(pluginFolder), null, 2));
+  fs.writeFileSync('manifest.json', JSON.stringify(makeManifestJson(pluginFolder), null, 2));
   fs.mkdirSync('commands/cmd1', { recursive: true });
   execTemplateDir(TEMPLATE_COMMAND_DIR, 'commands/cmd1');
 
@@ -99,10 +99,10 @@ function makePackageJson(pluginName) {
 /**
  * Prepares a scaffold manifest.json
  */
-function makeManifetJson(pluginName) {
+function makeManifestJson(pluginName) {
   return {
     "api": "1.0.0",
-    "name": pluginFolder,
+    "name": pluginName,
     "id": "000000000000000000",
     "menu": [
       {
