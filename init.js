@@ -31,7 +31,7 @@ module.exports = async function init({ dir, template }) {
   }
 
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+    fs.mkdirSync(dir, { recursive: true });
   }
 
   const templateDir = path.resolve(__dirname, 'init-templates', template);
@@ -62,7 +62,7 @@ module.exports = async function init({ dir, template }) {
 
   try {
     console.log('📦 Installing dependencies...');
-    await $('npm install --save-dev --force @figma/plugin-typings');
+    await $('npm install --save-dev @figma/plugin-typings');
     console.log(`✅ Done! Your plugin starter is ready.
 🔧 To build your plugin and watch for changes (start developing):
 

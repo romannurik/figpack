@@ -13,6 +13,6 @@
     "figma-messenger": "^1.0.5",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "react-figma-plugin-ds": "^2.1.0"
+    "react-figma-plugin-ds": "^2.2.0"
   }
 }
