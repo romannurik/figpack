@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const webpack = require('webpack');
+const equal = require('deep-equal');
 const path = require('path');
 const makeWebpackConfig = require('./webpack-config-maker');
 const makeManifest = require('./manifest-json-maker');
@@ -54,6 +55,7 @@ function rewatch() {
 
   // watcher for things that require a new webpack config (teardown + reinit)
   let outerWatcher = chokidar.watch('./commands', { ignoreInitial: true });
+  outerWatcher.add('./figpack.config.js');
   outerWatcher.on('add', maybeReinit);
   outerWatcher.on('change', maybeReinit);
   outerWatcher.on('unlink', maybeReinit);
@@ -148,7 +150,13 @@ function prepareFigpackConfig() {
       }
     }
   }
-  return { commands };
+
+  let fpConfig = { commands };
+  if (fs.existsSync('figpack.config.js')) {
+    let pluginFpConfig = require(path.resolve(process.cwd(), 'figpack.config.js'));
+    fpConfig.manifestTransform = pluginFpConfig.manifest;
+  }
+  return fpConfig;
 }
 
 /**
@@ -156,7 +164,7 @@ function prepareFigpackConfig() {
  * in the figpack configuration.
  */
 function configChangeRequiresNewWebpack(a, b) {
-  return JSON.stringify(a) !== JSON.stringify(b);
+  return !equal(b, a);
 }
 
 /**
@@ -179,8 +187,10 @@ function buildMainEntryJs({ commands }) {
       ({ module }, i) => `const cmd${i} = require("${path.resolve(module)}").default;`),
     'switch (figma.command) {',
     ...commands.map(
-      ({ id }, i) => `case "${id}": cmd${i}(); break;`),
-    `default: figma.closePlugin(); }`,
+      ({ id }, i) =>
+        `case "${id}": cmd${i}({}); break;` +
+        `case "relaunch_${id}": cmd${i}({relaunch:true}); break;`),
+    `default: figma.notify("Unknown command: " + figma.command); figma.closePlugin(); }`,
   ].join('\n'));
   return mainEntry.name;
 }
@@ -188,10 +198,13 @@ function buildMainEntryJs({ commands }) {
 /**
  * Writes extra files beyond what webpack emits, given the figpack configuration.
  */
-function writeExtraFiles({ commands }) {
+function writeExtraFiles({ commands, manifestTransform }) {
   // write manifest
   let manifest = JSON.parse(fs.readFileSync('manifest.json'));
   manifest = makeManifest({ commands, manifest });
+  if (manifestTransform) {
+    manifest = manifestTransform(manifest);
+  }
   fs.writeFileSync(path.resolve('dist/manifest.json'), JSON.stringify(manifest, null, 2));
 
   // write UI HTML files

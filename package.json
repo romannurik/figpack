@@ -16,6 +16,7 @@
     "chokidar": "^3.5.1",
     "classnames": "^2.3.1",
     "css-loader": "^5.2.4",
+    "deep-equal": "^2.0.5",
     "html-loader": "^2.1.2",
     "node-sass": "^6.0.0",
     "raw-loader": "^4.0.2",
