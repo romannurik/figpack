@@ -16,7 +16,7 @@ function App() {
   return <>
     <Title weight="bold">Command 1</Title>
     <Label>Enter a value:</Label>
-    <Input defaultValue={value} onChange={val => setValue(val)} />
+    <Input placeholder="" defaultValue={value} onChange={val => setValue(val)} />
     <Label>
       <span>Current value: <span className="purple">{value}</span></span>
     </Label>
