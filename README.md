@@ -12,13 +12,13 @@ It's optimized for plugins that could get complex, meaning multiple commands, mu
 
 ## Scaffold a new plugin
 
-To initialize a new plugin:
+To start writing a new plugin:
 
 ```shell
 $ npx figpack init <dir>
 ```
 
-If you want to use the "opinionated" template that uses React and `react-figma-plugin-ds`:
+You can also use the opinionated React + `react-figma-plugin-ds` template:
 
 ```shell
 $ npx figpack init --template react <dir>
@@ -43,8 +43,8 @@ $ npm start         # build + watch
 
 Figpack handles a couple typically very boilerplate-y things for you:
 
-- It looks at your `commands` folder and exposes commands based on the subdirectory names. You should have an `index.ts` (or .js) file in there.
-- It automatically detects `ui.html` (or .tsx, .jsx, .ts, .js) for each command and exposes it as `__html__` for the command's main module.
+- It expects a `commands` folder in your plugin, that has each command as a separate module (e.g. `commands/cmd1.ts` or `commands/cmd1/index.ts`).
+- It automatically detects the presence of a `ui.html` (or .tsx, .jsx, .ts, .js) for each command, compiles it if needed, and exposes it through the `__html__` global variable.
 
 # License
 
