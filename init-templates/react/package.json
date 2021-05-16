@@ -6,6 +6,7 @@
     "start": "figpack --watch"
   },
   "devDependencies": {
+    "@types/react": "^16.14.0",
     "figpack": "^%%FIGPACK_VERSION%%"
   },
   "dependencies": {
