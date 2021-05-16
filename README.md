@@ -1,3 +1,5 @@
+[![npm](https://img.shields.io/npm/v/figpack?logo=npm&cacheSeconds=1800)](https://www.npmjs.com/package/figpack)
+
 # Figpack
 
 **EXPERIMENTAL / WORK IN PROGRESS**
