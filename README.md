@@ -1,4 +1,9 @@
-[![npm](https://img.shields.io/npm/v/figpack?logo=npm&cacheSeconds=1800)](https://www.npmjs.com/package/figpack)
+# Update: [create-figma-plugin](https://yuanqing.github.io/create-figma-plugin/) is a better, more maintained version of what this tool set out to do! Please use that :)
+
+----
+----
+----
+----
 
 # Figpack
 
